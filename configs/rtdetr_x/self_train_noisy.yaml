@@ -1,0 +1,39 @@
+# RT-DETR-x self-training config — noisy FICS-PCB REMAP variant
+# GEN0 teacher: runs/rtdetr_x/baseline_noisy/weights/best.pt  (train with base_noisy.yaml first)
+# Labeled set: data/FICS_PCB_REMAP_NOISE/ passed via --labeled-images / --labeled-labels in run script
+# Val set: data/val/ (clean)
+
+model: rtdetr-x.pt
+task: detect
+
+data:
+  train: data/combined/images   # placeholder — SelfTrainer builds this path dynamically per iteration
+  val: data/val/images
+  nc: 8
+  names: ["resistor_smd", "ceramic_capacitor", "ic", "diode", "inductor", "electrolytic_capacitor", "tantalum_capacitor", "led"]
+
+train:
+  epochs: 36
+  imgsz: 640
+  batch: 8
+  optimizer: AdamW
+  lr0: 0.00005
+  weight_decay: 0.0001
+  warmup_epochs: 2
+  patience: 15
+  seed: 42
+  project: runs/rtdetr_x
+  name: self_train_noisy
+  workers: 0
+
+pseudo_label:
+  conf_threshold: 0.25
+  nms_iou: 0.45
+  max_det: 300
+  adaptive_threshold: true
+  candidate_floor: 0.05
+
+self_training:
+  iterations: 4
+  warm_start: runs/rtdetr_x/baseline_noisy/weights/best.pt
+  partial_labels_dir: data/PCB_DSLR_CROPS_512/orig_distribution/labels

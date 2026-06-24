@@ -1,0 +1,24 @@
+# RT-DETR-x baseline config
+
+model: rtdetr-x.pt
+task: detect
+
+data:
+  train: data/labeled/images
+  val: data/val/images
+  nc: 8
+  names: ["resistor_smd", "ceramic_capacitor", "ic", "diode", "inductor", "electrolytic_capacitor", "tantalum_capacitor", "led"]
+
+train:
+  epochs: 72
+  imgsz: 640
+  batch: 8
+  optimizer: AdamW
+  lr0: 0.0001
+  weight_decay: 0.0001
+  warmup_epochs: 2
+  patience: 20
+  seed: 42
+  project: runs/rtdetr_x
+  name: baseline
+  workers: 0

@@ -1,0 +1,54 @@
+# YOLO12m self-training config — PCB-DSLR target domain, PATH A STATIC PROBE, v3
+# Architecture: Area Attention (A2) — local self-attention (Tian et al., 2025)
+#
+# STATIC-0.25 ablation of the adaptive probe (2026-06-21). Same NOISY support base
+# (data/FICS_PCB_REMAP_NOISE_TRAIN), Path A (pseudo_only_mode: false), but a FLAT
+# conf=0.25 threshold for every generation instead of the adaptive precision-target 0.9.
+# This matches Honorato's GEN run on PCB-DSLR (YOLOv5, Cth=0.25, FICS-PCB REMAP support
+# base), whose abundant classes (IC/resistor/ceramic/inductor) GROW across generations
+# while only the rare/domain-mismatched ones (LED-SMD/tantalum/diode) drop to zero.
+# Our adaptive probe instead collapsed ALL non-IC classes — hypothesis: the precision-0.9
+# adaptive threshold starved the non-IC pseudo-labels. This run isolates the threshold
+# variable (noise held constant) to test it.
+#
+# adaptive_threshold: false + no conf_schedule => SelfTrainer seeds iter1 and every later
+# generation at the fixed conf_threshold (PseudoLabeler uses 0.25 for inference + filtering).
+# iterations: 2 — enough to see whether annotations persist iter1 -> iter2.
+#
+# GEN0 teacher: runs/yolo12/baseline_noisy_v3/weights/best.pt.
+# PCB-DSLR IC GT (data/PCB_DSLR_CROPS_512/orig_distribution/labels) merged via partial_labels_dir.
+
+model: yolo12m.pt
+task: detect
+
+data:
+  train: data/combined/images   # placeholder — SelfTrainer builds this path dynamically per iteration
+  val: data/dev/images
+  nc: 8
+  names: ["resistor_smd", "ceramic_capacitor", "ic", "diode", "inductor", "electrolytic_capacitor", "tantalum_capacitor", "led"]
+
+train:
+  epochs: 50
+  imgsz: 640
+  batch: 6
+  optimizer: AdamW
+  lr0: 0.0005
+  weight_decay: 0.0005
+  patience: 15
+  seed: 42
+  project: runs/yolo12
+  name: self_train_dslr_pathA_static_probe
+  workers: 0
+
+pseudo_label:
+  conf_threshold: 0.25   # flat C_th for all generations (Honorato's validated threshold)
+  nms_iou: 0.45
+  max_det: 300
+  adaptive_threshold: false
+
+self_training:
+  iterations: 2
+  warm_start: runs/yolo12/baseline_noisy_v3/weights/best.pt
+  unlabeled_dir: data/PCB_DSLR_CROPS_512/orig_distribution/images
+  pseudo_only_mode: false
+  partial_labels_dir: data/PCB_DSLR_CROPS_512/orig_distribution/labels

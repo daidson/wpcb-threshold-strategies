@@ -1,0 +1,36 @@
+# RT-DETR-l self-training config — progressive threshold schedule [0.25 → 0.40 → 0.55]
+
+model: rtdetr-l.pt
+task: detect
+
+data:
+  train: data/combined/images   # placeholder — SelfTrainer builds this path dynamically per iteration
+  val: data/val/images
+  nc: 8
+  names: ["resistor_smd", "ceramic_capacitor", "ic", "diode", "inductor", "electrolytic_capacitor", "tantalum_capacitor", "led"]
+
+train:
+  epochs: 36
+  imgsz: 640
+  batch: 8
+  optimizer: AdamW
+  lr0: 0.00005
+  weight_decay: 0.0001
+  warmup_epochs: 2
+  patience: 15
+  seed: 42
+  project: runs/rtdetr_l
+  name: self_train
+  workers: 0
+
+pseudo_label:
+  conf_threshold: 0.25
+  nms_iou: 0.45
+  max_det: 300
+  adaptive_threshold: false
+  conf_schedule: [0.25, 0.40, 0.55]
+
+self_training:
+  iterations: 3
+  warm_start: runs/rtdetr_v3/baseline-2/weights/best.pt
+  partial_labels_dir: data/PCB_DSLR_CROPS_512/orig_distribution/labels
