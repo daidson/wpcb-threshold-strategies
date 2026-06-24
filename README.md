@@ -1,4 +1,4 @@
-# Adaptive Confidence-Threshold Self-Labeling for Waste-PCB Detection
+# From Pseudo-Labels to Recycling Feasibility: Confidence Threshold Strategies in Self-Trained WPCB Detectors
 
 Semi-supervised object detection for **Waste Printed Circuit Board (WPCB)** component
 recovery. The pipeline extends the GEN self-labeling method of Honorato et al. (2025)
