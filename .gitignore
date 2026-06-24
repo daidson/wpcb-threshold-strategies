@@ -1,0 +1,102 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+.python-version
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (large files — tracked via DVC or manually)
+/data
+data/labeled/images/*
+data/labeled/labels/*
+data/unlabeled/images/*
+data/pseudo_labeled/images/*
+data/pseudo_labeled/labels/*
+data/val/images/*
+data/val/labels/*
+!data/**/.gitkeep
+
+# Model weights
+*.pt
+*.pth
+*.onnx
+*.engine
+*.weights
+
+# Experiment outputs
+results/
+runs/
+experiments/*.log
+experiments/*/
+!results/.gitkeep
+
+# Logs
+*.log
+logs/
+wandb/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.env
+
+# Generated outputs
+configs/data.yaml
+class_verification.png
+
+# Local notes
+TODO.md
+.vscode/
+
+# Docs — ignore large binaries and personal notes; track architecture diagrams
+docs/*.pdf
+docs/*.docx
+docs/*.md
+docs/*.py
+docs/figures/*.png
+docs/figures/*.pdf
+docs/figures/*.tex
+docs/_build_tikz.sh
+# Whitelist the canonical-results doc the README points reviewers to.
+!docs/experiment-log.md
+
+# Paper — track sources (manuscript.tex, references.bib, build.sh, README,
+# checklist), PNG figures, and table .tex. Ignore LaTeX build artifacts, the
+# heavy binaries (docx + compiled pdf), the figure PDF masters, and the archive.
+paper/archive/
+paper/manuscript.docx
+paper/*.pdf
+paper/figures/*.pdf
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.synctex.gz
+
+# Windows / WSL download cruft
+*:Zone.Identifier

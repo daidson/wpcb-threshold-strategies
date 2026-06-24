@@ -1,0 +1,41 @@
+# YOLOv10 self-training config — noisy FICS-PCB REMAP variant (v3: held-out DEV calibration)
+# GEN0 teacher: runs/yolov10/baseline_noisy_v3/weights/best.pt  (train with base_noisy.yaml first)
+# Labeled set: data/FICS_PCB_REMAP_NOISE_TRAIN/ passed via --labeled-images / --labeled-labels in run script
+# Monitoring + adaptive calibration: data/dev/ (clean held-out DEV, board-disjoint from TEST)
+
+model: yolov10m.pt
+task: detect
+
+data:
+  train: data/combined/images   # placeholder — SelfTrainer builds this path dynamically per iteration
+  val: data/dev/images
+  nc: 8
+  names: ["resistor_smd", "ceramic_capacitor", "ic", "diode", "inductor", "electrolytic_capacitor", "tantalum_capacitor", "led"]
+
+train:
+  epochs: 50
+  imgsz: 640
+  batch: 12
+  optimizer: AdamW
+  lr0: 0.0005
+  weight_decay: 0.0005
+  patience: 15
+  seed: 42
+  project: runs/yolov10
+  name: self_train_noisy
+  workers: 0
+
+pseudo_label:
+  conf_threshold: 0.25
+  nms_iou: 0.45
+  max_det: 300
+  adaptive_threshold: true
+  candidate_floor: 0.05
+  target_precision: 0.9   # adaptive: per-class lowest conf reaching this precision on DEV (ignored under --no-adaptive)
+
+self_training:
+  iterations: 3
+  warm_start: runs/yolov10/baseline_noisy_v3/weights/best.pt
+  unlabeled_dir: data/FICS_PCB_REMAP_NOISE_TRAIN/images
+  pseudo_only_mode: true
+  partial_labels_dir: null

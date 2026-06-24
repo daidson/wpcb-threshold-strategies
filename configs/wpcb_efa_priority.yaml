@@ -1,0 +1,75 @@
+# Recycling-priority reference table for the WPCB-EFAv2+ economic feasibility
+# assessment (scripts/wpcb_efa.py).
+#
+# Each of the 8 detector classes is mapped to a qualitative recycling value, an
+# environmental-risk level, and its principal recoverable metals. These are the
+# categorical inputs to the MVP composition assessment; they do NOT encode any
+# absolute mass or monetary figure (the absolute tier is gated on physical scale
+# + per-component recovery data — see docs/wpcb_efa_feasibility.md).
+#
+# Source: each per-class (recycling_value / env_risk / key_metals) cell is sourced
+# in docs/efa_source_matrix.md. Primary anchor is Huang et al. 2022 (Waste Manage.
+# 141:154-162) — per-component metals + hazardous-waste classification; plus
+# Wu et al. 2022 (recycling value), Lim et al. 2011 (LED), the EU 2023 critical-raw-
+# materials list (tantalum/gallium), a Ta-capacitor recovery paper, and RoHS 2015/863.
+# env_risk for inductor/diode (medium) and led (high) follow Huang 2022 §3.6-3.7.
+#
+# `value_rank` (1 = highest recycling value) drives the priority ordering;
+# `risk_rank` (1 = highest environmental risk) breaks ties. Both are ordinal.
+
+classes:
+  resistor_smd:
+    recycling_value: low          # thick/thin-film terminations; little precious metal
+    env_risk: medium              # legacy Pb in older film resistors
+    value_rank: 6
+    risk_rank: 5
+    key_metals: [Ni, Cu, Sn]
+
+  ceramic_capacitor:
+    recycling_value: medium       # MLCC electrodes (Ni/Cu base-metal; Pd/Ag in older parts)
+    env_risk: low
+    value_rank: 4
+    risk_rank: 7
+    key_metals: [Ni, Cu, Sn, Pd, Ag]
+
+  ic:
+    recycling_value: high         # bond wires + lead-frame: Au, Ag, Pd, Cu
+    env_risk: high                # brominated flame retardants, legacy Pb solder
+    value_rank: 1
+    risk_rank: 2
+    key_metals: [Au, Ag, Pd, Cu]
+
+  diode:
+    recycling_value: low
+    env_risk: medium              # Huang 2022 §3.7: rectifier/SMD diodes leach excess As/Se/Pb (GaAs + lead-tin pins)
+    value_rank: 7
+    risk_rank: 8
+    key_metals: [Cu, Fe, Ag]
+
+  inductor:
+    recycling_value: medium       # copper winding + ferrite core
+    env_risk: medium              # Huang 2022 §3.6: choke/HP/SMD inductors hazardous (excess As/Se, US)
+    value_rank: 3
+    risk_rank: 6
+    key_metals: [Cu, Fe]
+
+  electrolytic_capacitor:
+    recycling_value: medium       # aluminium foil; Honorato has a validated mass+Al-recovery chain
+    env_risk: high                # liquid electrolyte
+    value_rank: 5
+    risk_rank: 1
+    key_metals: [Al, Fe]
+
+  tantalum_capacitor:
+    recycling_value: high         # tantalum — EU/US critical raw material
+    env_risk: medium
+    value_rank: 2
+    risk_rank: 4
+    key_metals: [Ta, Ag, Mn]
+
+  led:
+    recycling_value: low
+    env_risk: high                # Lim 2011 + Huang 2022 §3.7: many LEDs hazardous (excess Se 20.78 / As / Pb)
+    value_rank: 8
+    risk_rank: 3
+    key_metals: [Ga, Au]

@@ -1,0 +1,26 @@
+# YOLOv8 baseline config — labeled data only
+
+model: yolov8m.pt          # pretrained checkpoint
+task: detect
+
+data:
+  train: data/labeled/images
+  val: data/val/images
+  nc: 8
+  names: ["resistor_smd", "ceramic_capacitor", "ic", "diode", "inductor", "electrolytic_capacitor", "tantalum_capacitor", "led"]
+
+train:
+  epochs: 100
+  imgsz: 640
+  batch: 16
+  optimizer: AdamW
+  lr0: 0.001
+  weight_decay: 0.0005
+  warmup_epochs: 3
+  patience: 20             # early stopping
+  seed: 42
+
+  project: runs/yolov8
+  name: baseline
+  save_period: 10
+  workers: 0

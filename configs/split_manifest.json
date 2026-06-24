@@ -1,0 +1,135 @@
+{
+  "seed": 42,
+  "split_unit": "s-number",
+  "selection": {
+    "min_images": 730,
+    "max_images": 900,
+    "min_dev_per_class": 10,
+    "train_retain_frac": 0.5,
+    "trials": 200000
+  },
+  "source": {
+    "images": "/mnt/f/Mestrado Data/data/FICS_PCB_REMAP_AUGUMENTED_1024_512_YOLO/FICS_1024_512/images/train",
+    "labels": "/mnt/f/Mestrado Data/data/FICS_PCB_REMAP_AUGUMENTED_1024_512_YOLO/FICS_1024_512/labels/train"
+  },
+  "materialized_as": "symlink",
+  "counts": {
+    "dev_boards": 9,
+    "dev_images": 870,
+    "train_boards": 15,
+    "train_images": 3324,
+    "test_boards": 7
+  },
+  "dev_boards": [
+    "s1",
+    "s10",
+    "s17",
+    "s19",
+    "s23",
+    "s29",
+    "s30",
+    "s5",
+    "s9"
+  ],
+  "train_boards": [
+    "s11",
+    "s12",
+    "s13",
+    "s14",
+    "s15",
+    "s16",
+    "s2",
+    "s20",
+    "s22",
+    "s24",
+    "s25",
+    "s3",
+    "s31",
+    "s4",
+    "s7"
+  ],
+  "test_boards": [
+    "s18",
+    "s21",
+    "s26",
+    "s27",
+    "s28",
+    "s6",
+    "s8"
+  ],
+  "per_class": {
+    "resistor_smd": {
+      "dev": 3690,
+      "train": 11964,
+      "global": 15654
+    },
+    "ceramic_capacitor": {
+      "dev": 3732,
+      "train": 10284,
+      "global": 14016
+    },
+    "ic": {
+      "dev": 744,
+      "train": 2340,
+      "global": 3084
+    },
+    "diode": {
+      "dev": 84,
+      "train": 108,
+      "global": 192
+    },
+    "inductor": {
+      "dev": 258,
+      "train": 402,
+      "global": 660
+    },
+    "electrolytic_capacitor": {
+      "dev": 66,
+      "train": 174,
+      "global": 240
+    },
+    "tantalum_capacitor": {
+      "dev": 90,
+      "train": 222,
+      "global": 312
+    },
+    "led": {
+      "dev": 84,
+      "train": 270,
+      "global": 354
+    }
+  },
+  "board_to_split": {
+    "s1": "dev",
+    "s10": "dev",
+    "s17": "dev",
+    "s19": "dev",
+    "s23": "dev",
+    "s29": "dev",
+    "s30": "dev",
+    "s5": "dev",
+    "s9": "dev",
+    "s11": "train",
+    "s12": "train",
+    "s13": "train",
+    "s14": "train",
+    "s15": "train",
+    "s16": "train",
+    "s2": "train",
+    "s20": "train",
+    "s22": "train",
+    "s24": "train",
+    "s25": "train",
+    "s3": "train",
+    "s31": "train",
+    "s4": "train",
+    "s7": "train",
+    "s18": "test",
+    "s21": "test",
+    "s26": "test",
+    "s27": "test",
+    "s28": "test",
+    "s6": "test",
+    "s8": "test"
+  }
+}

@@ -1,0 +1,40 @@
+# YOLOv8 self-training config — noisy FICS-PCB REMAP variant, progressive threshold (v3)
+# GEN0 teacher: runs/yolov8/baseline_noisy_v3/weights/best.pt  (train with base_noisy.yaml first)
+# Labeled set: data/FICS_PCB_REMAP_NOISE_TRAIN/ passed via --labeled-images / --labeled-labels in run script
+# Monitoring: data/dev/ (clean held-out DEV, board-disjoint from TEST)
+
+model: yolov8m.pt
+task: detect
+
+data:
+  train: data/combined/images   # placeholder — SelfTrainer builds this path dynamically per iteration
+  val: data/dev/images
+  nc: 8
+  names: ["resistor_smd", "ceramic_capacitor", "ic", "diode", "inductor", "electrolytic_capacitor", "tantalum_capacitor", "led"]
+
+train:
+  epochs: 50
+  imgsz: 640
+  batch: 16
+  optimizer: AdamW
+  lr0: 0.0005
+  weight_decay: 0.0005
+  patience: 15
+  seed: 42
+  project: runs/yolov8
+  name: self_train_noisy_progressive
+  workers: 0
+
+pseudo_label:
+  conf_threshold: 0.25
+  nms_iou: 0.45
+  max_det: 300
+  adaptive_threshold: false
+  conf_schedule: [0.35, 0.45, 0.55]
+
+self_training:
+  iterations: 3
+  warm_start: runs/yolov8/baseline_noisy_v3/weights/best.pt
+  unlabeled_dir: data/FICS_PCB_REMAP_NOISE_TRAIN/images
+  pseudo_only_mode: true
+  partial_labels_dir: null
